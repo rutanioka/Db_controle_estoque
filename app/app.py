@@ -1,13 +1,16 @@
 from flask import Flask
+from .routes.usuario import usuario
+from .routes.produto import produto
+from .commands.userCommands import userCommands
+from .extensions import database
 
-app=Flask(__name__)
+def creat_app(config_object = "app.settings"):
+    app=Flask(__name__)
+    app.config.from_object(config_object)
+    database.init_app(app)
 
-@app.route ('/')
-def index():
-    return 'index page'
-@app.route('/main')
-def main():
-    return 'main page'
+    app.register_blueprint(usuario)
+    app.register_blueprint(produto)
+    app.register_blueprint(userCommands)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    return app
